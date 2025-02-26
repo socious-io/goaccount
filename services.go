@@ -6,7 +6,7 @@ import (
 )
 
 // Starts an auth session
-func StartSession(redirectURL string) (*Session, error) {
+func StartSession(redirectURL string) (*Session, string, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: fmt.Sprintf("%s/auth/session", config.Host),
 		Method:   MethodPost,
@@ -17,13 +17,17 @@ func StartSession(redirectURL string) (*Session, error) {
 		},
 	})
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	sessionToken := new(AuthSessionResponse)
 	if err := json.Unmarshal(response, &sessionToken); err != nil {
-		return nil, err
+		return nil, "", err
 	}
-	return &sessionToken.AuthSession, nil
+	return &sessionToken.AuthSession, fmt.Sprintf(
+		"%s/auth/session/%s?auth_mode=login",
+		config.Host,
+		sessionToken.AuthSession.ID,
+	), nil
 }
 
 // Verify digital code and fetch sso token
