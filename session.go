@@ -5,6 +5,47 @@ import (
 	"fmt"
 )
 
+type Session struct {
+	ID          string  `json:"id" form:"id"`
+	RedirectURL string  `json:"redirect_url" form:"redirect_url"`
+	AccessID    string  `json:"access_id" form:"access_id"`
+	Access      *string `json:"access" form:"access"`
+	ExpireAt    string  `json:"expire_at" form:"expire_at"`
+	VerifiedAt  *string `json:"verified_at" form:"verified_at"`
+	UpdatedAt   string  `json:"updated_at" form:"updated_at"`
+	CreatedAt   string  `json:"created_at" form:"created_at"`
+}
+
+type SessionToken struct {
+	AccessToken  string `json:"access_token" form:"access_token"`
+	RefreshToken string `json:"refresh_token" form:"refresh_token"`
+	TokenType    string `json:"token_type" form:"token_type"`
+}
+
+type AuthSessionResponse struct {
+	AuthSession Session `json:"auth_session" form:"auth_session" validate:"required,min=8"`
+}
+
+// @TODO: handle refresh token when access token failing
+
+// Get User profile base on access token given
+func (t SessionToken) GetUserProfile(user interface{}) error {
+	response, err := Request(RequestOptions{
+		Endpoint: fmt.Sprintf("%s/users", config.Host),
+		Method:   MethodGet,
+		Headers: map[string]string{
+			"Authorization": fmt.Sprintf("Bearer %s", t.AccessToken),
+		},
+	})
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(response, user); err != nil {
+		return err
+	}
+	return nil
+}
+
 // Starts an auth session
 func StartSession(redirectURL string) (*Session, string, error) {
 	response, err := Request(RequestOptions{
@@ -50,22 +91,4 @@ func GetSessionToken(code string) (*SessionToken, error) {
 	}
 	return sessionToken, nil
 
-}
-
-// Get User profile base on access token given
-func GetUserProfile(token SessionToken, user interface{}) error {
-	response, err := Request(RequestOptions{
-		Endpoint: fmt.Sprintf("%s/users", config.Host),
-		Method:   MethodGet,
-		Headers: map[string]string{
-			"Authorization": fmt.Sprintf("Bearer %s", token.AccessToken),
-		},
-	})
-	if err != nil {
-		return err
-	}
-	if err := json.Unmarshal(response, &user); err != nil {
-		return err
-	}
-	return nil
 }
