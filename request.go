@@ -1,4 +1,4 @@
-package sociousid
+package goaccount
 
 import (
 	"bytes"

@@ -1,3 +1,3 @@
-module github.com/socious-io/go-socious-id
+module github.com/socious-io/goaccount
 
 go 1.22.5

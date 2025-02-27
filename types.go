@@ -1,4 +1,4 @@
-package sociousid
+package goaccount
 
 // Responses
 type AuthSessionResponse struct {
