@@ -17,6 +17,7 @@ type Session struct {
 }
 
 type SessionToken struct {
+	// TODO: add expire date
 	AccessToken  string `json:"access_token" form:"access_token"`
 	RefreshToken string `json:"refresh_token" form:"refresh_token"`
 	TokenType    string `json:"token_type" form:"token_type"`
