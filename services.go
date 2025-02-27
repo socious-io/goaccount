@@ -53,12 +53,12 @@ func GetSessionToken(code string) (*SessionToken, error) {
 }
 
 // Get User profile base on access token given
-func GetUserProfile(accessToken string, user interface{}) error {
+func GetUserProfile(token SessionToken, user interface{}) error {
 	response, err := Request(RequestOptions{
 		Endpoint: fmt.Sprintf("%s/users", config.Host),
 		Method:   MethodGet,
 		Headers: map[string]string{
-			"Authorization": fmt.Sprintf("Bearer %s", accessToken),
+			"Authorization": fmt.Sprintf("Bearer %s", token.AccessToken),
 		},
 	})
 	if err != nil {

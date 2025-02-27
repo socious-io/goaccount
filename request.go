@@ -22,6 +22,7 @@ const (
 type RequestOptions struct {
 	Method   HTTPRequestMethodType
 	Endpoint string
+	Token    *SessionToken
 	Headers  map[string]string
 	Query    map[string]string
 	Body     map[string]any
