@@ -25,7 +25,7 @@ type RequestOptions struct {
 	Token    *SessionToken
 	Headers  map[string]string
 	Query    map[string]string
-	Body     map[string]any
+	Body     interface{}
 }
 
 // HTTPRequest sends an HTTP request with given method, URL, headers, query parameters, and body as map[string]any.
