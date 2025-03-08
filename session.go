@@ -29,43 +29,6 @@ type AuthSessionResponse struct {
 
 // @TODO: handle refresh token when access token failing
 
-// Get User profile base on access token given
-func (t SessionToken) GetUserProfile(user interface{}) error {
-	response, err := Request(RequestOptions{
-		Endpoint: fmt.Sprintf("%s/users", config.Host),
-		Method:   MethodGet,
-		Headers: map[string]string{
-			"Authorization": fmt.Sprintf("Bearer %s", t.AccessToken),
-		},
-	})
-	if err != nil {
-		return err
-	}
-	if err := json.Unmarshal(response, user); err != nil {
-		return err
-	}
-	return nil
-}
-
-// Get User profile base on access token given
-func (t SessionToken) UpdateUserProfile(user interface{}) error {
-	response, err := Request(RequestOptions{
-		Endpoint: fmt.Sprintf("%s/users", config.Host),
-		Method:   MethodPut,
-		Body:     user,
-		Headers: map[string]string{
-			"Authorization": fmt.Sprintf("Bearer %s", t.AccessToken),
-		},
-	})
-	if err != nil {
-		return err
-	}
-	if err := json.Unmarshal(response, user); err != nil {
-		return err
-	}
-	return nil
-}
-
 // Starts an auth session
 func StartSession(redirectURL string) (*Session, string, error) {
 	response, err := Request(RequestOptions{
