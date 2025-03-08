@@ -49,7 +49,7 @@ func GetOrganization(organizationId string, organization interface{}) error {
 	return nil
 }
 
-func (t SessionToken) CreateOrganization(organizationId string, organization interface{}) error {
+func (t SessionToken) CreateOrganization(organization interface{}) error {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations"),
 		Method:   MethodPost,
@@ -69,9 +69,26 @@ func (t SessionToken) CreateOrganization(organizationId string, organization int
 
 func (t SessionToken) UpdateOrganization(organizationId string, organization interface{}) error {
 	response, err := Request(RequestOptions{
-		Endpoint: endpoint("organizations"),
-		Method:   MethodPost,
+		Endpoint: endpoint("organizations/%s", organizationId),
+		Method:   MethodPut,
 		Body:     organization,
+		Headers: map[string]string{
+			"Authorization": bearer(t.AccessToken),
+		},
+	})
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(response, organization); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (t SessionToken) DeleteOrganization(organizationId string, organization interface{}) error {
+	response, err := Request(RequestOptions{
+		Endpoint: endpoint("organizations/%s", organizationId),
+		Method:   MethodDelete,
 		Headers: map[string]string{
 			"Authorization": bearer(t.AccessToken),
 		},
