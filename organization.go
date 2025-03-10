@@ -20,7 +20,7 @@ func GetAllOrganizations(organization interface{}) error {
 
 func (t SessionToken) GetMyOrganizations(organization interface{}) error {
 	response, err := Request(RequestOptions{
-		Endpoint: endpoint("organizations/my"),
+		Endpoint: endpoint("organizations/membered"),
 		Method:   MethodGet,
 		Headers: map[string]string{
 			"Authorization": bearer(t.AccessToken),
