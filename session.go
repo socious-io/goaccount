@@ -3,6 +3,7 @@ package goaccount
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 type Session struct {
@@ -26,8 +27,6 @@ type SessionToken struct {
 type AuthSessionResponse struct {
 	AuthSession Session `json:"auth_session" form:"auth_session" validate:"required,min=8"`
 }
-
-// @TODO: handle refresh token when access token failing
 
 // Starts an auth session
 func StartSession(redirectURL string) (*Session, string, error) {
@@ -77,8 +76,22 @@ func GetSessionToken(code string) (*SessionToken, error) {
 }
 
 func (t *SessionToken) Refresh() error {
+
+	claims, err := ParseToken(t.AccessToken)
+	if err != nil {
+		return err
+	}
+
+	expireAt, err := claims.GetExpirationTime()
+	if err != nil {
+		return err
+	}
+	if expireAt.Before(time.Now()) {
+		return nil
+	}
+
 	response, err := Request(RequestOptions{
-		Endpoint: fmt.Sprintf("%s/auth/session/refresh", config.Host),
+		Endpoint: fmt.Sprintf("%s/auth/refresh", config.Host),
 		Method:   MethodPost,
 		Body: map[string]any{
 			"client_id":     config.ID,

@@ -19,6 +19,7 @@ func GetAllOrganizations(organization interface{}) error {
 }
 
 func (t SessionToken) GetMyOrganizations(organization interface{}) error {
+	t.Refresh()
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations/membered"),
 		Method:   MethodGet,
@@ -50,6 +51,7 @@ func GetOrganization(organizationId string, organization interface{}) error {
 }
 
 func (t SessionToken) CreateOrganization(organization interface{}) error {
+	t.Refresh()
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations"),
 		Method:   MethodPost,
@@ -68,6 +70,7 @@ func (t SessionToken) CreateOrganization(organization interface{}) error {
 }
 
 func (t SessionToken) UpdateOrganization(organizationId string, organization interface{}) error {
+	t.Refresh()
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations/%s", organizationId),
 		Method:   MethodPut,
@@ -86,6 +89,7 @@ func (t SessionToken) UpdateOrganization(organizationId string, organization int
 }
 
 func (t SessionToken) DeleteOrganization(organizationId string, organization interface{}) error {
+	t.Refresh()
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations/%s", organizationId),
 		Method:   MethodDelete,
@@ -103,6 +107,7 @@ func (t SessionToken) DeleteOrganization(organizationId string, organization int
 }
 
 func (t SessionToken) AddMemberToOrganization(organizationId string, userId string, organization interface{}) error {
+	t.Refresh()
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations/%s/members/%s", organizationId, userId),
 		Method:   MethodPost,
@@ -120,6 +125,7 @@ func (t SessionToken) AddMemberToOrganization(organizationId string, userId stri
 }
 
 func (t SessionToken) RemoveMemberFromOrganization(organizationId string, userId string, organization interface{}) error {
+	t.Refresh()
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations/%s/members/%s", organizationId, userId),
 		Method:   MethodDelete,
