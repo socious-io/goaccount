@@ -6,6 +6,7 @@ import (
 
 // Get User profile base on access token given
 func (t SessionToken) GetUserProfile(user interface{}) error {
+	t.Refresh()
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("users"),
 		Method:   MethodGet,

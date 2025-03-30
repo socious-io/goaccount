@@ -5,9 +5,10 @@ var config = new(Config)
 
 // Config represents the configuration structure for the Socious ID SSO service.
 type Config struct {
-	Host   string `json:"host" mapstructure:"host"`
-	ID     string `json:"id" mapstructure:"id"`
-	Secret string `json:"secret" mapstructure:"secret"`
+	Host      string                                 `json:"host" mapstructure:"host"`
+	ID        string                                 `json:"id" mapstructure:"id"`
+	Secret    string                                 `json:"secret" mapstructure:"secret"`
+	OnRefresh func(oldToken, newToken *SessionToken) `json:"on_refresh" mapstructure:"on_refresh"`
 }
 
 // Setup initializes the Socious ID SDK with the provided configuration.

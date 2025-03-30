@@ -37,7 +37,7 @@ func StartSession(redirectURL string) (*Session, string, error) {
 		Body: map[string]any{
 			"client_id":     config.ID,
 			"client_secret": config.Secret,
-			"redirect_url":  redirectURL, //NOTE: if needs redirection within backend fmt.Sprintf("%s/auth/login/callback", config.Config.Host),
+			"redirect_url":  redirectURL,
 		},
 	})
 	if err != nil {
@@ -74,4 +74,25 @@ func GetSessionToken(code string) (*SessionToken, error) {
 	}
 	return sessionToken, nil
 
+}
+
+func (t *SessionToken) Refresh() error {
+	response, err := Request(RequestOptions{
+		Endpoint: fmt.Sprintf("%s/auth/session/refresh", config.Host),
+		Method:   MethodPost,
+		Body: map[string]any{
+			"client_id":     config.ID,
+			"client_secret": config.Secret,
+			"refresh_token": t.RefreshToken,
+		},
+	})
+	if err != nil {
+		return nil
+	}
+	newSessionToken := new(SessionToken)
+	if err := json.Unmarshal(response, &newSessionToken); err != nil {
+		return nil
+	}
+	config.OnRefresh(t, newSessionToken)
+	return nil
 }
