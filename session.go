@@ -3,6 +3,7 @@ package goaccount
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 type Session struct {
@@ -17,17 +18,15 @@ type Session struct {
 }
 
 type SessionToken struct {
-	// TODO: add expire date
 	AccessToken  string `json:"access_token" form:"access_token"`
 	RefreshToken string `json:"refresh_token" form:"refresh_token"`
 	TokenType    string `json:"token_type" form:"token_type"`
+	Renewed      bool   `json:"renewed" form:"renewed"`
 }
 
 type AuthSessionResponse struct {
 	AuthSession Session `json:"auth_session" form:"auth_session" validate:"required,min=8"`
 }
-
-// @TODO: handle refresh token when access token failing
 
 // Starts an auth session
 func StartSession(redirectURL string) (*Session, string, error) {
@@ -37,7 +36,7 @@ func StartSession(redirectURL string) (*Session, string, error) {
 		Body: map[string]any{
 			"client_id":     config.ID,
 			"client_secret": config.Secret,
-			"redirect_url":  redirectURL, //NOTE: if needs redirection within backend fmt.Sprintf("%s/auth/login/callback", config.Config.Host),
+			"redirect_url":  redirectURL,
 		},
 	})
 	if err != nil {
@@ -73,5 +72,51 @@ func GetSessionToken(code string) (*SessionToken, error) {
 		return nil, err
 	}
 	return sessionToken, nil
+}
 
+func NewSessionToken(accessToken, refreshToken string) (*SessionToken, error) {
+	sessionToken := &SessionToken{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		TokenType:    "Bearer",
+		Renewed:      false,
+	}
+	if err := sessionToken.Refresh(); err != nil {
+		return nil, err
+	}
+
+	return sessionToken, nil
+}
+
+func (t *SessionToken) Refresh() error {
+	claims, err := ParseToken(t.AccessToken)
+	if err != nil {
+		return err
+	}
+
+	expireAt, err := claims.GetExpirationTime()
+	if err != nil {
+		return err
+	}
+	if expireAt.Before(time.Now()) {
+		return nil
+	}
+
+	response, err := Request(RequestOptions{
+		Endpoint: fmt.Sprintf("%s/auth/refresh", config.Host),
+		Method:   MethodPost,
+		Body: map[string]any{
+			"client_id":     config.ID,
+			"client_secret": config.Secret,
+			"refresh_token": t.RefreshToken,
+		},
+	})
+	if err != nil {
+		return nil
+	}
+	if err := json.Unmarshal(response, t); err != nil {
+		return nil
+	}
+	t.Renewed = true
+	return nil
 }
