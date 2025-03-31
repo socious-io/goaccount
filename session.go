@@ -81,7 +81,7 @@ func NewSessionToken(accessToken, refreshToken string) (*SessionToken, error) {
 		TokenType:    "Bearer",
 		Renewed:      false,
 	}
-	err := sessionToken.Refresh()
+	if err := sessionToken.Refresh(); err != nil {
 		return nil, err
 	}
 
