@@ -6,7 +6,6 @@ import (
 
 // Get User profile base on access token given
 func (t SessionToken) GetUserProfile(user interface{}) error {
-	t.Refresh()
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("users"),
 		Method:   MethodGet,
@@ -25,7 +24,6 @@ func (t SessionToken) GetUserProfile(user interface{}) error {
 
 // Get User profile base on access token given
 func (t SessionToken) UpdateUserProfile(user interface{}) error {
-	t.Refresh()
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("users"),
 		Method:   MethodPut,
