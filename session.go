@@ -82,7 +82,6 @@ func NewSessionToken(accessToken, refreshToken string) (*SessionToken, error) {
 		Renewed:      false,
 	}
 	err := sessionToken.Refresh()
-	if err != nil {
 		return nil, err
 	}
 
