@@ -98,7 +98,7 @@ func (t *SessionToken) Refresh() error {
 	if err != nil {
 		return err
 	}
-	if expireAt.Before(time.Now()) {
+	if expireAt.After(time.Now()) {
 		return nil
 	}
 
