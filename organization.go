@@ -135,3 +135,40 @@ func (t *SessionToken) RemoveMemberFromOrganization(organizationId string, userI
 	}
 	return nil
 }
+
+func VerifyOrganization(organization interface{}) error {
+	response, err := Request(RequestOptions{
+		Endpoint: endpoint("organizations/verify"),
+		Method:   MethodPost,
+		Body: map[string]any{
+			"client_id":     config.ID,
+			"client_secret": config.Secret,
+		},
+	})
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(response, organization); err != nil {
+		return err
+	}
+	return nil
+}
+
+func ChangeOrganizationStatus(status string, organization interface{}) error {
+	response, err := Request(RequestOptions{
+		Endpoint: endpoint("organizations/verify"),
+		Method:   MethodPost,
+		Body: map[string]any{
+			"client_id":     config.ID,
+			"client_secret": config.Secret,
+			"status":        status,
+		},
+	})
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(response, organization); err != nil {
+		return err
+	}
+	return nil
+}
