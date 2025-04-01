@@ -40,3 +40,40 @@ func (t *SessionToken) UpdateUserProfile(user interface{}) error {
 	}
 	return nil
 }
+
+func VerifyUser(user interface{}) error {
+	response, err := Request(RequestOptions{
+		Endpoint: endpoint("users/verify"),
+		Method:   MethodPost,
+		Body: map[string]any{
+			"client_id":     config.ID,
+			"client_secret": config.Secret,
+		},
+	})
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(response, user); err != nil {
+		return err
+	}
+	return nil
+}
+
+func ChangeUserStatus(status string, user interface{}) error {
+	response, err := Request(RequestOptions{
+		Endpoint: endpoint("users/verify"),
+		Method:   MethodPost,
+		Body: map[string]any{
+			"client_id":     config.ID,
+			"client_secret": config.Secret,
+			"status":        status,
+		},
+	})
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(response, user); err != nil {
+		return err
+	}
+	return nil
+}
