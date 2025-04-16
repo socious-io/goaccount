@@ -5,7 +5,7 @@ import (
 )
 
 // Get User profile base on access token given
-func (t *SessionToken) GetUserProfile(user interface{}) error {
+func (t *SessionToken) GetUserProfile(user interface{}) (*User, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("users"),
 		Method:   MethodGet,
@@ -14,16 +14,18 @@ func (t *SessionToken) GetUserProfile(user interface{}) error {
 		},
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, user); err != nil {
-		return err
+
+	result := new(User)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
 // Get User profile base on access token given
-func (t *SessionToken) UpdateUserProfile(user interface{}) error {
+func (t *SessionToken) UpdateUserProfile(user interface{}) (*User, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("users"),
 		Method:   MethodPut,
@@ -33,10 +35,12 @@ func (t *SessionToken) UpdateUserProfile(user interface{}) error {
 		},
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, user); err != nil {
-		return err
+
+	result := new(User)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
