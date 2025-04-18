@@ -7,13 +7,13 @@ import (
 )
 
 type ImpactPoint struct {
-	UserID              uuid.UUID        `json:"user_id" form:"user_id" validate:"required"`
-	TotalPoints         int              `json:"total_points" form:"total_points"`
-	SocialCause         string           `json:"social_cause" form:"social_cause"`
-	SocialCauseCategory string           `json:"social_cause_category" form:"social_cause_category"`
-	Type                string           `json:"type" form:"type" validate:"required,oneof=WORKSUBMIT DONATION VOLUNTEER OTHER"`
-	AccessID            *uuid.UUID       `json:"access_id" form:"access_id"`
-	Meta                *json.RawMessage `json:"meta" form:"meta"`
+	UserID              uuid.UUID      `json:"user_id" form:"user_id" validate:"required"`
+	TotalPoints         int            `json:"total_points" form:"total_points"`
+	SocialCause         string         `json:"social_cause" form:"social_cause"`
+	SocialCauseCategory string         `json:"social_cause_category" form:"social_cause_category"`
+	Type                string         `json:"type" form:"type" validate:"required,oneof=WORKSUBMIT DONATION VOLUNTEER OTHER"`
+	AccessID            *uuid.UUID     `json:"access_id" form:"access_id"`
+	Meta                map[string]any `json:"meta" form:"meta"`
 }
 
 // Get User profile base on access token given
