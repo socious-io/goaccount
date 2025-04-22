@@ -101,7 +101,7 @@ func (ip ImpactPoint) AddImpactPoint() error {
 
 	_, err := Request(RequestOptions{
 		Endpoint: endpoint("impact-points"),
-		Method:   MethodPut,
+		Method:   MethodPost,
 		Body:     body,
 	})
 	if err != nil {
