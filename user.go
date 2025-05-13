@@ -5,7 +5,7 @@ import (
 )
 
 // Get User profile base on access token given
-func (t *SessionToken) GetUserProfile(user interface{}) (*User, error) {
+func (t *SessionToken) GetUserProfile() (*User, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("users"),
 		Method:   MethodGet,

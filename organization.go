@@ -4,21 +4,23 @@ import (
 	"encoding/json"
 )
 
-func GetAllOrganizations(organization interface{}) error {
+func GetAllOrganizations() ([]Organization, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations"),
 		Method:   MethodGet,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := []Organization{}
+	if err := json.Unmarshal(response, &result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
-func (t *SessionToken) GetMyOrganizations(organization interface{}) ([]Organization, error) {
+func (t *SessionToken) GetMyOrganizations() ([]Organization, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations/membered"),
 		Method:   MethodGet,
@@ -31,7 +33,7 @@ func (t *SessionToken) GetMyOrganizations(organization interface{}) ([]Organizat
 	}
 
 	result := []Organization{}
-	if err := json.Unmarshal(response, result); err != nil {
+	if err := json.Unmarshal(response, &result); err != nil {
 		return nil, err
 	}
 	return result, nil
