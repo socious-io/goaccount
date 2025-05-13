@@ -151,3 +151,44 @@ func (t *SessionToken) RemoveMemberFromOrganization(organizationId string, userI
 	}
 	return result, nil
 }
+
+func VerifyOrganization(organizationId string) (*Organization, error) {
+	response, err := Request(RequestOptions{
+		Endpoint: endpoint("organizations/%s/verify", organizationId),
+		Method:   MethodPost,
+		Body: map[string]any{
+			"client_id":     config.ID,
+			"client_secret": config.Secret,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := new(Organization)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
+	}
+	return result, err
+}
+
+func ChangeOrganizationStatus(organizationId string, status string) (*Organization, error) {
+	response, err := Request(RequestOptions{
+		Endpoint: endpoint("organizations/%s/status", organizationId),
+		Method:   MethodPost,
+		Body: map[string]any{
+			"client_id":     config.ID,
+			"client_secret": config.Secret,
+			"status":        status,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := new(Organization)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
+	}
+	return result, err
+}
