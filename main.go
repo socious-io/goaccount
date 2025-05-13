@@ -8,6 +8,10 @@ type Config struct {
 	Host   string `json:"host" mapstructure:"host"`
 	ID     string `json:"id" mapstructure:"id"`
 	Secret string `json:"secret" mapstructure:"secret"`
+	Jwt    struct {
+		Secret   string `json:"secret" mapstructure:"secret"`
+		Duration int    `json:"duration" mapstructure:"duration"`
+	} `json:"jwt" mapstructure:"jwt"`
 }
 
 // Setup initializes the Socious ID SDK with the provided configuration.
