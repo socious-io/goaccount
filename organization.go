@@ -4,21 +4,23 @@ import (
 	"encoding/json"
 )
 
-func GetAllOrganizations(organization interface{}) error {
+func GetAllOrganizations() ([]Organization, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations"),
 		Method:   MethodGet,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := []Organization{}
+	if err := json.Unmarshal(response, &result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
-func (t *SessionToken) GetMyOrganizations(organization interface{}) error {
+func (t *SessionToken) GetMyOrganizations() ([]Organization, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations/membered"),
 		Method:   MethodGet,
@@ -27,29 +29,33 @@ func (t *SessionToken) GetMyOrganizations(organization interface{}) error {
 		},
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := []Organization{}
+	if err := json.Unmarshal(response, &result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
-func GetOrganization(organizationId string, organization interface{}) error {
+func GetOrganization(id string) (*Organization, error) {
 	response, err := Request(RequestOptions{
-		Endpoint: endpoint("organizations/%s", organizationId),
+		Endpoint: endpoint("organizations/%s", id),
 		Method:   MethodGet,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := new(Organization)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
-func (t *SessionToken) CreateOrganization(organization interface{}) error {
+func (t *SessionToken) CreateOrganization(organization Organization) (*Organization, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations"),
 		Method:   MethodPost,
@@ -59,17 +65,19 @@ func (t *SessionToken) CreateOrganization(organization interface{}) error {
 		},
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := new(Organization)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
-func (t *SessionToken) UpdateOrganization(organizationId string, organization interface{}) error {
+func (t *SessionToken) UpdateOrganization(id string, organization Organization) (*Organization, error) {
 	response, err := Request(RequestOptions{
-		Endpoint: endpoint("organizations/%s", organizationId),
+		Endpoint: endpoint("organizations/%s", id),
 		Method:   MethodPut,
 		Body:     organization,
 		Headers: map[string]string{
@@ -77,32 +85,36 @@ func (t *SessionToken) UpdateOrganization(organizationId string, organization in
 		},
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := new(Organization)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
-func (t *SessionToken) DeleteOrganization(organizationId string, organization interface{}) error {
+func (t *SessionToken) DeleteOrganization(id string) (*Organization, error) {
 	response, err := Request(RequestOptions{
-		Endpoint: endpoint("organizations/%s", organizationId),
+		Endpoint: endpoint("organizations/%s", id),
 		Method:   MethodDelete,
 		Headers: map[string]string{
 			"Authorization": bearer(t.AccessToken),
 		},
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := new(Organization)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
-func (t *SessionToken) AddMemberToOrganization(organizationId string, userId string, organization interface{}) error {
+func (t *SessionToken) AddMemberToOrganization(organizationId string, userId string) (*Organization, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations/%s/members/%s", organizationId, userId),
 		Method:   MethodPost,
@@ -111,15 +123,17 @@ func (t *SessionToken) AddMemberToOrganization(organizationId string, userId str
 		},
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := new(Organization)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
-func (t *SessionToken) RemoveMemberFromOrganization(organizationId string, userId string, organization interface{}) error {
+func (t *SessionToken) RemoveMemberFromOrganization(organizationId string, userId string) (*Organization, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: endpoint("organizations/%s/members/%s", organizationId, userId),
 		Method:   MethodDelete,
@@ -128,17 +142,19 @@ func (t *SessionToken) RemoveMemberFromOrganization(organizationId string, userI
 		},
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := new(Organization)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, nil
 }
 
-func VerifyOrganization(organization interface{}) error {
+func VerifyOrganization(organizationId string) (*Organization, error) {
 	response, err := Request(RequestOptions{
-		Endpoint: endpoint("organizations/verify"),
+		Endpoint: endpoint("organizations/%s/verify", organizationId),
 		Method:   MethodPost,
 		Body: map[string]any{
 			"client_id":     config.ID,
@@ -146,17 +162,19 @@ func VerifyOrganization(organization interface{}) error {
 		},
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := new(Organization)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, err
 }
 
-func ChangeOrganizationStatus(status string, organization interface{}) error {
+func ChangeOrganizationStatus(organizationId string, status string) (*Organization, error) {
 	response, err := Request(RequestOptions{
-		Endpoint: endpoint("organizations/verify"),
+		Endpoint: endpoint("organizations/%s/status", organizationId),
 		Method:   MethodPost,
 		Body: map[string]any{
 			"client_id":     config.ID,
@@ -165,10 +183,12 @@ func ChangeOrganizationStatus(status string, organization interface{}) error {
 		},
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if err := json.Unmarshal(response, organization); err != nil {
-		return err
+
+	result := new(Organization)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
 	}
-	return nil
+	return result, err
 }
