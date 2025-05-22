@@ -63,6 +63,7 @@ type User struct {
 	Address           *string `db:"address" json:"address"`
 	GeonameId         *int64  `db:"geoname_id" json:"geoname_id"`
 	MobileCountryCode *string `db:"mobile_country_code" json:"mobile_country_code"`
+	ImpactPoints      *int    `db:"impact_points" json:"impact_points"`
 
 	AvatarID   *uuid.UUID     `db:"avatar_id" json:"avatar_id"`
 	Avatar     *Media         `db:"-" json:"avatar"`
@@ -75,6 +76,8 @@ type User struct {
 	IdentityVerifiedAt *time.Time `db:"identity_verified_at" json:"identity_verified_at"`
 	EmailVerifiedAt    *time.Time `db:"email_verified_at" json:"email_verified_at"`
 	PhoneVerifiedAt    *time.Time `db:"phone_verified_at" json:"phone_verified_at"`
+
+	ReferredBy *uuid.UUID `db:"referred_by" json:"referred_by"`
 
 	CreatedAt time.Time  `db:"created_at" json:"created_at"`
 	UpdatedAt time.Time  `db:"updated_at" json:"updated_at"`
