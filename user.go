@@ -14,6 +14,7 @@ type ImpactPoint struct {
 	Type                string         `json:"type" form:"type" validate:"required,oneof=WORKSUBMIT DONATION VOLUNTEER OTHER"`
 	AccessID            *uuid.UUID     `json:"access_id" form:"access_id"`
 	Meta                map[string]any `json:"meta" form:"meta"`
+	UniqueTag           string         `json:"unique_tag" form:"unique_tag"`
 }
 
 // Get User profile base on access token given
