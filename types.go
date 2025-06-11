@@ -34,7 +34,7 @@ type AuthSessionResponse struct {
 
 type Media struct {
 	ID         uuid.UUID `db:"id" json:"id"`
-	IdentityID uuid.UUID `db:"identity_id" json:"-"`
+	IdentityID uuid.UUID `db:"identity_id" json:"identity_id"`
 	URL        string    `db:"url" json:"url"`
 	Filename   string    `db:"filename" json:"filename"`
 	CreatedAt  time.Time `db:"created_at" json:"created_at"`
@@ -63,6 +63,7 @@ type User struct {
 	Address           *string `db:"address" json:"address"`
 	GeonameId         *int64  `db:"geoname_id" json:"geoname_id"`
 	MobileCountryCode *string `db:"mobile_country_code" json:"mobile_country_code"`
+	ImpactPoints      *int    `db:"impact_points" json:"impact_points"`
 
 	AvatarID   *uuid.UUID     `db:"avatar_id" json:"avatar_id"`
 	Avatar     *Media         `db:"-" json:"avatar"`
@@ -71,6 +72,8 @@ type User struct {
 	CoverID   *uuid.UUID     `db:"cover_id" json:"cover_id"`
 	Cover     *Media         `db:"-" json:"cover"`
 	CoverJson types.JSONText `db:"cover" json:"-"`
+
+	ReferredBy *uuid.UUID `db:"referred_by" json:"referred_by"`
 
 	IdentityVerifiedAt *time.Time `db:"identity_verified_at" json:"identity_verified_at"`
 	EmailVerifiedAt    *time.Time `db:"email_verified_at" json:"email_verified_at"`
