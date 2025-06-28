@@ -7,7 +7,7 @@ import (
 )
 
 // Starts an auth session
-func StartSession(redirectURL string) (*Session, string, error) {
+func StartSession(redirectURL string, authMode AuthModeType) (*Session, string, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: fmt.Sprintf("%s/auth/session", config.Host),
 		Method:   MethodPost,
@@ -25,9 +25,10 @@ func StartSession(redirectURL string) (*Session, string, error) {
 		return nil, "", err
 	}
 	return &sessionToken.AuthSession, fmt.Sprintf(
-		"%s/auth/session/%s?auth_mode=login",
+		"%s/auth/session/%s?auth_mode=%s",
 		config.Host,
 		sessionToken.AuthSession.ID,
+		string(authMode),
 	), nil
 }
 
@@ -96,5 +97,20 @@ func (t *SessionToken) Refresh() error {
 		return nil
 	}
 	t.Renewed = true
+	return nil
+}
+
+// Logout
+func (t *SessionToken) Logout() error {
+	_, err := Request(RequestOptions{
+		Endpoint: endpoint("auth/logout"),
+		Method:   MethodDelete,
+		Headers: map[string]string{
+			"Authorization": bearer(t.AccessToken),
+		},
+	})
+	if err != nil {
+		return err
+	}
 	return nil
 }

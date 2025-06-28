@@ -48,3 +48,18 @@ func scanEnum(value interface{}, target interface{}) error {
 	}
 	return nil
 }
+
+type AuthModeType string
+
+const (
+	AuthModeRegister AuthModeType = "register"
+	AuthModeLogin    AuthModeType = "login"
+)
+
+func (amt *AuthModeType) Scan(value interface{}) error {
+	return scanEnum(value, (*string)(amt))
+}
+
+func (amt AuthModeType) Value() (driver.Value, error) {
+	return string(amt), nil
+}
