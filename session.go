@@ -99,18 +99,3 @@ func (t *SessionToken) Refresh() error {
 	t.Renewed = true
 	return nil
 }
-
-// Logout
-func (t *SessionToken) Logout() error {
-	_, err := Request(RequestOptions{
-		Endpoint: endpoint("auth/logout"),
-		Method:   MethodDelete,
-		Headers: map[string]string{
-			"Authorization": bearer(t.AccessToken),
-		},
-	})
-	if err != nil {
-		return err
-	}
-	return nil
-}
