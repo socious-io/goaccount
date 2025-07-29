@@ -15,6 +15,7 @@ type ImpactPoint struct {
 	AccessID            *uuid.UUID     `json:"access_id" form:"access_id"`
 	Meta                map[string]any `json:"meta" form:"meta"`
 	UniqueTag           string         `json:"unique_tag" form:"unique_tag"`
+	Value               float64        `json:"value" form:"value"`
 }
 
 // Get User profile base on access token given
