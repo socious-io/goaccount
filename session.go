@@ -7,7 +7,7 @@ import (
 )
 
 // Starts an auth session
-func StartSession(redirectURL string, authMode AuthModeType) (*Session, string, error) {
+func StartSession(redirectURL string, authMode AuthModeType, policies []PolicyType) (*Session, string, error) {
 	response, err := Request(RequestOptions{
 		Endpoint: fmt.Sprintf("%s/auth/session", config.Host),
 		Method:   MethodPost,
@@ -15,6 +15,7 @@ func StartSession(redirectURL string, authMode AuthModeType) (*Session, string, 
 			"client_id":     config.ID,
 			"client_secret": config.Secret,
 			"redirect_url":  redirectURL,
+			"policies":      policies,
 		},
 	})
 	if err != nil {

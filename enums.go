@@ -63,3 +63,19 @@ func (amt *AuthModeType) Scan(value interface{}) error {
 func (amt AuthModeType) Value() (driver.Value, error) {
 	return string(amt), nil
 }
+
+type PolicyType string
+
+const (
+	PolicyTypePreventUserAccountSelection PolicyType = "PREVENT_USER_ACCOUNT_SELECTION"
+	PolicyTypeRequireAtleastOneOrg        PolicyType = "REQUIRE_ATLEAST_ONE_ORG"
+	PolicyTypeEnforceOrgCreation          PolicyType = "ENFORCE_ORG_CREATION"
+)
+
+func (pt *PolicyType) Scan(value interface{}) error {
+	return scanEnum(value, (*string)(pt))
+}
+
+func (pt PolicyType) Value() (driver.Value, error) {
+	return string(pt), nil
+}
