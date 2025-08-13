@@ -38,6 +38,32 @@ func (t *SessionToken) GetUserProfile() (*User, error) {
 	return result, nil
 }
 
+// Create user from another platform (using email, firstname and lastname)
+func CreateUser(user User) (*User, error) {
+	data, _ := json.Marshal(user)
+	body := map[string]any{}
+
+	json.Unmarshal(data, &body)
+
+	body["client_id"] = config.ID
+	body["client_secret"] = config.Secret
+
+	response, err := Request(RequestOptions{
+		Endpoint: endpoint("users"),
+		Method:   MethodPost,
+		Body:     body,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	result := new(User)
+	if err := json.Unmarshal(response, result); err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
 // Get User profile base on access token given
 func (t *SessionToken) UpdateUserProfile(user interface{}) (*User, error) {
 	response, err := Request(RequestOptions{
