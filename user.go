@@ -85,7 +85,7 @@ func (t *SessionToken) GetUserProfile() (*User, error) {
 }
 
 // Create user from another platform (using email, firstname and lastname)
-func (u *User) CreateUser() error {
+func (u *User) Create() error {
 	data, _ := json.Marshal(u)
 	body := map[string]any{}
 
